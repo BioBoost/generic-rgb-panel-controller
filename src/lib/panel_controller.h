@@ -1,13 +1,14 @@
 #pragma once
 
 #include "mbed.h"
+#include "RgbPanel.h"
 
 namespace DevBit {
 
   class PanelController {
 
     public:
-      PanelController(void);    // TODO: Inject Panel ?
+      PanelController(RgbPanel * panel);    // TODO: Inject Panel ?
 
     public:
       void start(void);
@@ -24,11 +25,7 @@ namespace DevBit {
       Thread _refreshThread;
       volatile bool _keepRefreshing = true;
       Mutex mutex;
-
-      // For the moment internal buffer, later buffer of panel
-      const static size_t BUFFER_SIZE = 64;
-      uint32_t _buffer[BUFFER_SIZE] = { 0 };
-
+      RgbPanel * _panel;
   };
 
 };

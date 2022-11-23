@@ -1,16 +1,18 @@
 #include "mbed.h"
 #include "lib/panel_controller.h"
+#include "RgbPanel.h"
 
 DigitalOut alive(LED1);
 
 using namespace DevBit;
 
-PanelController panelController;
+RgbPanel panel(D0, D1, D2, D3, D4, D5, D6, D7, D8, D9, D10, D10, D11);
+PanelController panelController(&panel);
 
 int main() {
   printf("Starting RGB Panel Controller\n");
 
-  panelController.start();
+  panelController.start();    // Starts a refresh thread !
 
   uint32_t buffer[] = { 10, 20, 30, 40, 50 };
   while(true) {
