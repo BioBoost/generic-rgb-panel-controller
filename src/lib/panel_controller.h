@@ -8,7 +8,7 @@ namespace DevBit {
   class PanelController {
 
     public:
-      PanelController(RgbPanel * panel);    // TODO: Inject Panel ?
+      PanelController(RgbPanel * panel);
 
     public:
       void start(void);
@@ -16,6 +16,7 @@ namespace DevBit {
 
     public:
       void write_buffer(const uint32_t * buffer, size_t size);
+      void write_buffer(const char * buffer, size_t size);
       void clear_buffer(void);
 
     private:

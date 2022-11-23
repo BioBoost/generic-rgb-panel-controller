@@ -1,4 +1,5 @@
 #include "panel_controller.h"
+#include "mbed_assert.h"
 
 namespace DevBit {
 
@@ -20,23 +21,29 @@ namespace DevBit {
 
   void PanelController::refresh_panel(void) {
     while (_keepRefreshing) {
-      printf("Refreshing panel\n");   // TODO: Refresh actual panel
-      for(size_t i = 0; i < RgbPanel::BUFFER_SIZE; i++) printf("%d ", _panel->buffer[i]);
-      printf("\n");
-
-      ThisThread::sleep_for(1000ms);      // TODO: property !
+      _panel->draw();
+      ThisThread::sleep_for(25ms);      // TODO: property !
     }
   }
 
   void PanelController::write_buffer(const uint32_t * buffer, size_t size) {
-    if (size > RgbPanel::BUFFER_SIZE) size = RgbPanel::BUFFER_SIZE;
+    MBED_ASSERT(size == RgbPanel::BUFFER_SIZE);
 
     size_t byteSize = size*sizeof(_panel->buffer[0]);
-    size_t bytesLeft = (RgbPanel::BUFFER_SIZE-size)*sizeof(_panel->buffer[0]);
-
     mutex.lock();
     memcpy(_panel->buffer, buffer, byteSize);
-    memset(_panel->buffer+byteSize, 0, bytesLeft);
+    mutex.unlock();
+  }
+
+  void PanelController::write_buffer(const char * buffer, size_t size) {
+    MBED_ASSERT(size == 3*RgbPanel::BUFFER_SIZE);
+
+    mutex.lock();
+    // Can't just memcpy here because RgbPanel encodes colors using 4 bytes
+    for (size_t i = 0; i < RgbPanel::BUFFER_SIZE; i++) {
+      size_t c = 3 * i;
+      _panel->buffer[i] = ((uint32_t)buffer[c] << 16) + ((uint32_t)buffer[c+1] << 8) + ((uint32_t)buffer[c+2]);
+    }
     mutex.unlock();
   }
 
