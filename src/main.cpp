@@ -3,6 +3,7 @@
 #include "RgbPanel.h"
 #include "lib/receivers/tcp_receiver.h"
 #include "EthernetInterface.h"
+#include "lib/canvas.h"
 
 DigitalOut alive(LED1);
 
@@ -12,6 +13,8 @@ EthernetInterface network;
 RgbPanel panel(D0, D1, D2, D3, D4, D5, D6, D7, D8, D9, D10, D10, D11);
 PanelController panelController(&panel);
 Receivers::TcpReceiver receiver(&panelController);
+
+Canvas canvas;
 
 void benchmark_panel_draw(void) {
   printf("Benchmarking time it takes to draw the panel ...\n");
@@ -42,10 +45,18 @@ bool setup_network(void) {
   return true;
 }
 
+void canvas_demo(void) {
+  canvas.clear();
+  canvas.rectangle({0, 0}, 32, 32, Color::RED);
+
+  panelController.write_buffer(canvas.pixels(), canvas.size());
+}
+
 int main() {
   printf("Starting RGB Panel Controller\n");
 
   benchmark_panel_draw();
+  canvas_demo();
   setup_network();
 
   panelController.start();      // Starts a refresh thread !

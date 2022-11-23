@@ -2,6 +2,7 @@
 
 #include "mbed.h"
 #include "RgbPanel.h"
+#include "color.h"
 
 namespace DevBit {
 
@@ -17,6 +18,7 @@ namespace DevBit {
     public:
       void write_buffer(const uint32_t * buffer, size_t size);
       void write_buffer(const char * buffer, size_t size);
+      void write_buffer(const Color * pixels, size_t size);
       void clear_buffer(void);
 
     private:

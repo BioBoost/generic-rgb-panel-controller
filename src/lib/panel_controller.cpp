@@ -47,6 +47,16 @@ namespace DevBit {
     mutex.unlock();
   }
 
+  void PanelController::write_buffer(const Color * pixels, size_t size) {
+    MBED_ASSERT(size == RgbPanel::BUFFER_SIZE);
+
+    mutex.lock();
+    for (size_t i = 0; i < RgbPanel::BUFFER_SIZE; i++) {
+      _panel->buffer[i] = pixels[i].rgb();
+    }
+    mutex.unlock();
+  }
+
   void PanelController::clear_buffer(void) {
     mutex.lock();
     _panel->clear();
