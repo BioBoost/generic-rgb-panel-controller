@@ -23,13 +23,13 @@ const colors = {
   red: { r: 255, g: 0, b: 0 },
   green: { r: 0, g: 255, b: 0 },
   blue: { r: 0, g: 0, b: 255 },
+  white: { r: 255, g: 255, b: 255 }
 }
-
-const white = { r: 255, g: 255, b: 255 }
 
 const pixelArt = {
   x: 0,
   y: 0,
+  drag: false,      // keep drawing while moving
   iColor: 0,       // red
   color: function() { return Object.values(colors)[this.iColor] }
 };
@@ -55,12 +55,11 @@ function clear_drawing() {
       drawing[x][y] = { r: 0, g: 0, b: 0 }
     }
   }
-  clear();
   render();
 }
 
 clear_drawing();
-write_pixel(pixelArt.x, pixelArt.y, white);
+write_pixel(pixelArt.x, pixelArt.y, pixelArt.color());
 render();
 
 process.stdin.on('keypress', async (character, key) => {
@@ -76,50 +75,62 @@ process.stdin.on('keypress', async (character, key) => {
       break;
 
     case 'escape':
+      pixelArt.drag = false;
       clear_drawing();
-      write_pixel(pixelArt.x, pixelArt.y, white);
+      clear();
+      write_pixel(pixelArt.x, pixelArt.y, pixelArt.color());
       render();
       break;
 
     case 'down':
       write_pixel(pixelArt.x, pixelArt.y, drawing[pixelArt.x][pixelArt.y]);
       pixelArt.y = (pixelArt.y + 1) & 0x1F;
-      write_pixel(pixelArt.x, pixelArt.y, white);
+      write_pixel(pixelArt.x, pixelArt.y, pixelArt.color());
+      if (pixelArt.drag) drawing[pixelArt.x][pixelArt.y] = pixelArt.color()
       render();
       break;
 
     case 'up':
       write_pixel(pixelArt.x, pixelArt.y, drawing[pixelArt.x][pixelArt.y]);
       pixelArt.y = (pixelArt.y - 1) & 0x1F;
-      write_pixel(pixelArt.x, pixelArt.y, white);
+      write_pixel(pixelArt.x, pixelArt.y, pixelArt.color());
+      if (pixelArt.drag) drawing[pixelArt.x][pixelArt.y] = pixelArt.color()
       render();
       break;
 
     case 'right':
       write_pixel(pixelArt.x, pixelArt.y, drawing[pixelArt.x][pixelArt.y]);
       pixelArt.x = (pixelArt.x + 1) & 0x1F;
-      write_pixel(pixelArt.x, pixelArt.y, white);
+      write_pixel(pixelArt.x, pixelArt.y, pixelArt.color());
+      if (pixelArt.drag) drawing[pixelArt.x][pixelArt.y] = pixelArt.color()
       render();
       break;
 
     case 'left':
       write_pixel(pixelArt.x, pixelArt.y, drawing[pixelArt.x][pixelArt.y]);
       pixelArt.x = (pixelArt.x - 1) & 0x1F;
-      write_pixel(pixelArt.x, pixelArt.y, white);
+      write_pixel(pixelArt.x, pixelArt.y, pixelArt.color());
+      if (pixelArt.drag) drawing[pixelArt.x][pixelArt.y] = pixelArt.color()
       render();
       break;
 
     case 'space':
+      pixelArt.drag = false;
       drawing[pixelArt.x][pixelArt.y] = pixelArt.color()
-      write_pixel(pixelArt.x, pixelArt.y, white);
+      write_pixel(pixelArt.x, pixelArt.y, pixelArt.color());
       render();
       break;
     
     case 'backspace':
     case 'delete':
+      pixelArt.drag = false;
       drawing[pixelArt.x][pixelArt.y] = { r: 0, g: 0, b: 0 }
-      write_pixel(pixelArt.x, pixelArt.y, white);
+      write_pixel(pixelArt.x, pixelArt.y, pixelArt.color());
       render();
+      break;
+  
+    case 'd':
+      pixelArt.drag = !pixelArt.drag;
       break;
 
     case 's': {
