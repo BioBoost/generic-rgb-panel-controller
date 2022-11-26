@@ -1,5 +1,7 @@
 import { SerialPort } from 'serialport'
 import process, { exit } from 'process';
+import * as bmp from 'bmp-js'
+import fs from 'fs'
 
 console.log("Welcome to Pixy PixelArt by DevBit (VIVES College University)");
 
@@ -9,6 +11,12 @@ const port = new SerialPort({ path: '/dev/ttyACM0', baudRate: 115200 }, function
     return console.log('Failed to open port: ', err.message)
   }
 })
+
+function sleep(ms) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+}
 
 // Crude but we need to finish this fast !
 const colors = {
@@ -29,6 +37,7 @@ const pixelArt = {
 function write_pixel(x, y, color) { port.write(`PIXEL=${x},${y},${color.r},${color.g},${color.b}\n`); }
 function render() { port.write('RENDER!\n'); }
 function clear() { port.write('CLEAR!\n'); }
+function reset() { port.write('RESET!\n'); }
 
 console.log("Capturing keyboard input");
 
@@ -49,12 +58,12 @@ function clear_drawing() {
   clear();
   render();
 }
-clear_drawing();
 
+clear_drawing();
 write_pixel(pixelArt.x, pixelArt.y, white);
 render();
 
-process.stdin.on('keypress', (character, key) => {
+process.stdin.on('keypress', async (character, key) => {
   console.log(key)
 
   switch (key.name) {
@@ -68,6 +77,8 @@ process.stdin.on('keypress', (character, key) => {
 
     case 'escape':
       clear_drawing();
+      write_pixel(pixelArt.x, pixelArt.y, white);
+      render();
       break;
 
     case 'down':
@@ -107,6 +118,68 @@ process.stdin.on('keypress', (character, key) => {
     case 'backspace':
     case 'delete':
       drawing[pixelArt.x][pixelArt.y] = { r: 0, g: 0, b: 0 }
+      write_pixel(pixelArt.x, pixelArt.y, white);
+      render();
+      break;
+
+    case 's': {
+      const filename = `./images/${Date.now()}.bmp`
+      console.log(`Saving image ${filename}`);
+
+      const dataArray = []
+      for (let y = 0; y < 32; y++) {
+        for(let x = 0; x < 32; x++) {
+          dataArray.push(0);                  // A
+          dataArray.push(drawing[x][y].g);
+          dataArray.push(drawing[x][y].b);
+          dataArray.push(drawing[x][y].r);
+        }
+      }
+
+      const bmpData = {
+        data: Buffer.from(dataArray), //Buffer of AGBR,AGBR,...
+        width: 32, //Number
+        height: 32 //Number
+      };
+
+      const rawData = bmp.encode(bmpData);        //defaults to no compression
+      fs.writeFileSync(filename, rawData.data);
+      break;
+    }
+
+    // case 'l': {
+    //   const filename = `./images/1669487907495.bmp`;
+    //   console.log(`Loading image ${filename}`)
+    //   const bmpBuffer = fs.readFileSync(filename);
+    //   const bmpData = bmp.decode(bmpBuffer);
+
+    //   if (bmpData.height != 32 || bmpData.width != 32) {
+    //     console.log("Dimensions dont match");
+    //     break;
+    //   }
+      
+    //   for (let y = 0; y < 32; y++) {
+    //     for(let x = 0; x < 32; x++) {
+    //       drawing[x][y] = {
+    //         g: bmpData.data[4*32*y+4*x+1],
+    //         b: bmpData.data[4*32*y+4*x+2],
+    //         r: bmpData.data[4*32*y+4*x+3]
+    //       }
+    //       write_pixel(x, y, drawing[x][y]);
+    //       await sleep(5);
+    //       render();
+    //       await sleep(5);
+    //     }
+    //   }
+
+    //   render();
+    //   break;
+    // }
+
+    case 'r':
+      reset();
+      await sleep(200);
+      clear_drawing();
       write_pixel(pixelArt.x, pixelArt.y, white);
       render();
       break;
