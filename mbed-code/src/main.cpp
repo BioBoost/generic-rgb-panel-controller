@@ -46,17 +46,29 @@ bool setup_network(void) {
   return true;
 }
 
-void canvas_demo(void) {
+void canvas_demo_rocket(void) {
   canvas.clear();
-  canvas.rectangle({0, 0}, 32, 32, Color::GREEN);
-  // canvas.rectangle_filled({1, 1}, 30, 30, Color::BLUE);
-  // canvas.pixel({0, 0}, Color::RED);
-  // canvas.pixel({13, 0}, Color::GREEN);
-  // canvas.pixel({0, 23}, Color::BLUE);
-  // canvas.pixel({0, 8}, Color::WHITE);
 
-  // canvas.circle({ 12, 12 }, 4, Color::RED);
-  canvas.circle_filled({ 24, 24 }, 4, Color::WHITE);
+  // Top
+  canvas.circle_filled({ 16, 10 }, 4, Color::RED);
+  canvas.rectangle_filled({15, 5}, 3, 1, Color::RED);
+  canvas.pixel({16, 4}, Color::RED);
+
+  // Wings
+  canvas.circle_filled({ 11, 25 }, 5, Color::RED);
+  canvas.circle_filled({ 21, 25 }, 5, Color::RED);
+  canvas.circle_filled({ 16, 31 }, 9, Color::BLACK);
+
+  // Flames
+  canvas.circle_filled({ 16, 25 }, 2, Color::YELLOW);
+  canvas.pixel({ 16, 28 }, Color::YELLOW);
+  canvas.pixel({ 16, 29 }, Color::YELLOW);
+
+  // Body
+  canvas.rectangle_filled({12, 9}, 9, 16, Color::WHITE);
+
+  // Window
+  canvas.circle_filled({ 16, 13 }, 1, Color::BLUE);
 
   panelController.write_buffer(canvas.pixels(), canvas.size());
 }
@@ -67,7 +79,7 @@ int main() {
 
   // benchmark_panel_draw();       // Damn drawing a panel costs us 17ms, which would allow for maximum refresh rate of 58Hz
                                 // So if we set interval between draws to 8ms we get total of 25ms giving us 40Hz
-  canvas_demo();
+  canvas_demo_rocket();
   // setup_network();
 
   // receiver.listen(&network);    // Starts a receiver thread !

@@ -38,6 +38,7 @@ namespace DevBit {
       static const Color RED;
       static const Color GREEN;
       static const Color BLUE;
+      static const Color YELLOW;
 
     private:
       uint8_t _red = 0;
