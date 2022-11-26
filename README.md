@@ -21,3 +21,7 @@ The canvas mode supports a number of actions:
 4. v-line: vertical line in a specific color
 
 A possible future enhancement could be a `static` action that allows you to draw a static pixel map and save that. After which each clear would clear the canvas except for the static image.
+
+## Command Parser
+
+Command parser is copy of Sille's command parser for DUST. Maybe later it could become a library :). Thx mate. Works as a charm.

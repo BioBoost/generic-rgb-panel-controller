@@ -22,7 +22,7 @@ namespace DevBit {
   void PanelController::refresh_panel(void) {
     while (_keepRefreshing) {
       _panel->draw();
-      ThisThread::sleep_for(25ms);      // TODO: property !
+      ThisThread::sleep_for(3ms);      // TODO: property !
     }
   }
 

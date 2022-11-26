@@ -10,8 +10,13 @@ namespace DevBit {
 
     public:
       void clear(void);
+    
+    public:
       void pixel(Point location, Color color);
       void rectangle(Point origin, uint8_t width, uint8_t height, Color color);
+      void rectangle_filled(Point origin, uint8_t width, uint8_t height, Color color);
+      void circle(Point origin, uint8_t radius, Color color);
+      void circle_filled(Point origin, uint8_t radius, Color color);
 
     public:
       Color * pixels(void);
