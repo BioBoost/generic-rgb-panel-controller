@@ -1,0 +1,16 @@
+{
+  "name": "js-controller",
+  "version": "1.0.0",
+  "description": "Pixy PixelArt controller",
+  "main": "src/pixy_pixelart_controller.js",
+  "scripts": {
+    "start": "node src/pixy_pixelart_controller.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "type": "module",
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "serialport": "^10.5.0"
+  }
+}
