@@ -51,7 +51,7 @@ namespace DevBit {
   }
 
   uint32_t Color::rgb(void) const {
-    return ((uint32_t)red() << 16) + ((uint32_t)green() << 16) + ((uint32_t)blue());
+    return ((uint32_t)red() << 16) + ((uint32_t)green() << 8) + ((uint32_t)blue());
   }
 
   void Color::dim(uint8_t percentage) {
