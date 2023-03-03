@@ -191,7 +191,7 @@ process.stdin.on('keypress', async (character, key) => {
       reset();
       await sleep(200);
       clear_drawing();
-      write_pixel(pixelArt.x, pixelArt.y, white);
+      write_pixel(pixelArt.x, pixelArt.y, colors.white);
       render();
       break;
 
