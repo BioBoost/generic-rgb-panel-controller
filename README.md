@@ -83,9 +83,12 @@ Use the following keys:
 * space: draw pixel
 * c: change color
 * esc: clear the screen (blank)
+* del/backspace: clear pixel
 * r: reset (shows rocket)
 * d: drag mode (keep drawing while moving)
 * s: save
+
+There is also a basic website that displays these key mappings, which can come in handy when showcasing this project.
 
 ## QR-Code
 
