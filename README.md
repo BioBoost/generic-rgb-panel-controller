@@ -89,4 +89,4 @@ Use the following keys:
 
 ## QR-Code
 
-TODO
+![QR Code to this README](./img/qr-code.png)
